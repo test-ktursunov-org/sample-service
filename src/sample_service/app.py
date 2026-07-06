@@ -1,13 +1,26 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
+from sample_service import routes
+
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == "/health":
-            self._json(200, {"status": "ok"})
+            self._json(*routes.health())
+            return
+        if self.path == "/items":
+            self._json(*routes.list_items())
             return
         self._json(404, {"error": "not found"})
+
+    def do_POST(self):
+        if self.path != "/items":
+            self._json(404, {"error": "not found"})
+            return
+        length = int(self.headers.get("content-length", 0))
+        payload = json.loads(self.rfile.read(length) or b"{}")
+        self._json(*routes.create_item(payload))
 
     def _json(self, status: int, payload: dict) -> None:
         body = json.dumps(payload).encode()
