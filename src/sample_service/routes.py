@@ -14,5 +14,9 @@ def list_items() -> tuple[int, dict]:
 
 
 def create_item(payload: dict) -> tuple[int, dict]:
-    item = STORE.add(payload["name"])
+    name = str(payload.get("name", "")).strip()
+    if not name:
+        return 400, {"error": "name must not be blank"}
+
+    item = STORE.add(name)
     return 201, asdict(item)

@@ -11,3 +11,12 @@ def test_created_item_appears_in_the_listing():
     status, listing = routes.list_items()
     assert status == 200
     assert listing["items"] == [created]
+
+
+def test_a_blank_name_is_rejected():
+    routes.STORE = ItemStore()
+
+    for name in ("", "   "):
+        status, body = routes.create_item({"name": name})
+        assert status == 400, f"should reject: {name!r}"
+        assert body["error"]
