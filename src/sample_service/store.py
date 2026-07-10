@@ -18,5 +18,8 @@ class ItemStore:
         self._items[item.id] = item
         return item
 
-    def list(self) -> list[Item]:
-        return list(self._items.values())
+    def list(self, offset: int = 0, limit: int | None = None) -> list[Item]:
+        items = list(self._items.values())
+        if limit is None:
+            return items[offset:]
+        return items[offset : offset + limit]

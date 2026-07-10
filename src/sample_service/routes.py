@@ -9,8 +9,13 @@ def health() -> tuple[int, dict]:
     return 200, {"status": "ok"}
 
 
-def list_items() -> tuple[int, dict]:
-    return 200, {"items": [asdict(item) for item in STORE.list()]}
+DEFAULT_PAGE_SIZE = 20
+MAX_PAGE_SIZE = 100
+
+
+def list_items(offset: int = 0, limit: int = DEFAULT_PAGE_SIZE) -> tuple[int, dict]:
+    items = STORE.list(offset=offset, limit=limit)
+    return 200, {"items": [asdict(item) for item in items], "offset": offset}
 
 
 def create_item(payload: dict) -> tuple[int, dict]:
