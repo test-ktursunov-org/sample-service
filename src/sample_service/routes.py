@@ -14,6 +14,9 @@ MAX_PAGE_SIZE = 100
 
 
 def list_items(offset: int = 0, limit: int = DEFAULT_PAGE_SIZE) -> tuple[int, dict]:
+    offset = max(offset, 0)
+    limit = min(max(limit, 1), MAX_PAGE_SIZE)
+
     items = STORE.list(offset=offset, limit=limit)
     return 200, {"items": [asdict(item) for item in items], "offset": offset}
 
