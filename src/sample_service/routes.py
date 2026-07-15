@@ -28,3 +28,16 @@ def create_item(payload: dict) -> tuple[int, dict]:
 
     item = STORE.add(name)
     return 201, asdict(item)
+
+
+def get_item(item_id: int) -> tuple[int, dict]:
+    item = STORE.get(item_id)
+    if item is None:
+        return 404, {"error": "item not found"}
+    return 200, asdict(item)
+
+
+def delete_item(item_id: int) -> tuple[int, dict]:
+    if not STORE.delete(item_id):
+        return 404, {"error": "item not found"}
+    return 204, {}

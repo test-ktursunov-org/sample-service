@@ -18,6 +18,12 @@ class ItemStore:
         self._items[item.id] = item
         return item
 
+    def get(self, item_id: int) -> Item | None:
+        return self._items.get(item_id)
+
+    def delete(self, item_id: int) -> bool:
+        return self._items.pop(item_id, None) is not None
+
     def list(self, offset: int = 0, limit: int | None = None) -> list[Item]:
         items = list(self._items.values())
         if limit is None:
