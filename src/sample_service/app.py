@@ -2,6 +2,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
 from sample_service import routes
+from sample_service.config import Settings
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -34,5 +35,6 @@ class Handler(BaseHTTPRequestHandler):
         pass
 
 
-def serve(host: str = "127.0.0.1", port: int = 8080) -> None:
-    HTTPServer((host, port), Handler).serve_forever()
+def serve(settings: Settings | None = None) -> None:
+    settings = settings or Settings.from_env()
+    HTTPServer((settings.host, settings.port), Handler).serve_forever()
