@@ -1,11 +1,17 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
+import time
 
 from sample_service import routes
 from sample_service.config import Settings
+from sample_service.logging import log_request
 
 
 class Handler(BaseHTTPRequestHandler):
+    def handle_one_request(self):
+        self._started_at = time.monotonic()
+        super().handle_one_request()
+
     def do_GET(self):
         if self.path == "/health":
             self._json(*routes.health())
@@ -24,6 +30,8 @@ class Handler(BaseHTTPRequestHandler):
         self._json(*routes.create_item(payload))
 
     def _json(self, status: int, payload: dict) -> None:
+        log_request(self.command, self.path, status, self._started_at)
+
         body = json.dumps(payload).encode()
         self.send_response(status)
         self.send_header("content-type", "application/json")
