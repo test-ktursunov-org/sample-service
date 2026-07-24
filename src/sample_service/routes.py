@@ -9,6 +9,10 @@ def health() -> tuple[int, dict]:
     return 200, {"status": "ok"}
 
 
+def ready() -> tuple[int, dict]:
+    return 200, {"status": "ready", "items": len(STORE.list(limit=None))}
+
+
 DEFAULT_PAGE_SIZE = 20
 MAX_PAGE_SIZE = 100
 

@@ -16,6 +16,9 @@ class Handler(BaseHTTPRequestHandler):
         if self.path == "/health":
             self._json(*routes.health())
             return
+        if self.path == "/ready":
+            self._json(*routes.ready())
+            return
         if self.path == "/items":
             self._json(*routes.list_items())
             return
