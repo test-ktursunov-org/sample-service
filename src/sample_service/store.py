@@ -1,3 +1,4 @@
+import threading
 from dataclasses import dataclass
 from itertools import count
 
@@ -12,10 +13,12 @@ class ItemStore:
     def __init__(self) -> None:
         self._items: dict[int, Item] = {}
         self._ids = count(1)
+        self._lock = threading.Lock()
 
     def add(self, name: str) -> Item:
-        item = Item(id=next(self._ids), name=name)
-        self._items[item.id] = item
+        with self._lock:
+            item = Item(id=next(self._ids), name=name)
+            self._items[item.id] = item
         return item
 
     def get(self, item_id: int) -> Item | None:
