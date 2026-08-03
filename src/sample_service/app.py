@@ -29,7 +29,16 @@ class Handler(BaseHTTPRequestHandler):
             self._json(404, {"error": "not found"})
             return
         length = int(self.headers.get("content-length", 0))
-        payload = json.loads(self.rfile.read(length) or b"{}")
+        raw = self.rfile.read(length)
+        try:
+            payload = json.loads(raw or b"{}")
+        except json.JSONDecodeError:
+            self._json(400, {"error": "body must be valid json"})
+            return
+        if not isinstance(payload, dict):
+            self._json(422, {"error": "body must be a json object"})
+            return
+
         self._json(*routes.create_item(payload))
 
     def _json(self, status: int, payload: dict) -> None:
