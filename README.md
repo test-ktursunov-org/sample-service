@@ -10,3 +10,9 @@ memory and exposes them over a JSON API.
 | GET    | `/health` | Liveness probe           |
 | GET    | `/items`  | List the stored items    |
 | POST   | `/items`  | Create an item by name   |
+| GET    | `/ready`  | Readiness plus item count |
+| GET    | `/items/{id}` | Read a single item   |
+| DELETE | `/items/{id}` | Delete a single item |
+
+See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) to run it locally and
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the layering.
