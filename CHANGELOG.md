@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.0
 
 - Readiness endpoint reporting the store size.
 - Structured request logging.
