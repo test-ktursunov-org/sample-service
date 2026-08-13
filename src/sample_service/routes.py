@@ -15,6 +15,7 @@ def ready() -> tuple[int, dict]:
 
 DEFAULT_PAGE_SIZE = 20
 MAX_PAGE_SIZE = 100
+MAX_NAME_LENGTH = 200
 
 
 def list_items(offset: int = 0, limit: int = DEFAULT_PAGE_SIZE) -> tuple[int, dict]:
@@ -29,6 +30,8 @@ def create_item(payload: dict) -> tuple[int, dict]:
     name = str(payload.get("name", "")).strip()
     if not name:
         return 400, {"error": "name must not be blank"}
+    if len(name) > MAX_NAME_LENGTH:
+        return 400, {"error": f"name must be at most {MAX_NAME_LENGTH} characters"}
 
     item = STORE.add(name)
     return 201, asdict(item)
