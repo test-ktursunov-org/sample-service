@@ -20,3 +20,12 @@ def test_a_blank_name_is_rejected():
         status, body = routes.create_item({"name": name})
         assert status == 400, f"should reject: {name!r}"
         assert body["error"]
+
+
+def test_an_overlong_name_is_rejected():
+    routes.STORE = ItemStore()
+
+    status, body = routes.create_item({"name": "x" * (routes.MAX_NAME_LENGTH + 1)})
+
+    assert status == 400
+    assert body["error"]
