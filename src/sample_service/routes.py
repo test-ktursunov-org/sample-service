@@ -1,8 +1,14 @@
 from dataclasses import asdict
 
-from sample_service.store import ItemStore
+from sample_service.store import Item, ItemStore
 
 STORE = ItemStore()
+
+
+def serialise(item: Item) -> dict:
+    body = asdict(item)
+    body["tags"] = list(item.tags)
+    return body
 
 
 def health() -> tuple[int, dict]:
@@ -23,7 +29,7 @@ def list_items(offset: int = 0, limit: int = DEFAULT_PAGE_SIZE) -> tuple[int, di
     limit = min(max(limit, 1), MAX_PAGE_SIZE)
 
     items = STORE.list(offset=offset, limit=limit)
-    return 200, {"items": [asdict(item) for item in items], "offset": offset}
+    return 200, {"items": [serialise(item) for item in items], "offset": offset}
 
 
 def create_item(payload: dict) -> tuple[int, dict]:
@@ -33,15 +39,17 @@ def create_item(payload: dict) -> tuple[int, dict]:
     if len(name) > MAX_NAME_LENGTH:
         return 400, {"error": f"name must be at most {MAX_NAME_LENGTH} characters"}
 
-    item = STORE.add(name)
-    return 201, asdict(item)
+    tags = tuple(str(tag).strip() for tag in payload.get("tags", []) if str(tag).strip())
+
+    item = STORE.add(name, tags=tags)
+    return 201, serialise(item)
 
 
 def get_item(item_id: int) -> tuple[int, dict]:
     item = STORE.get(item_id)
     if item is None:
         return 404, {"error": "item not found"}
-    return 200, asdict(item)
+    return 200, serialise(item)
 
 
 def delete_item(item_id: int) -> tuple[int, dict]:

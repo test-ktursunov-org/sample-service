@@ -7,6 +7,7 @@ from itertools import count
 class Item:
     id: int
     name: str
+    tags: tuple[str, ...] = ()
 
 
 class ItemStore:
@@ -15,9 +16,9 @@ class ItemStore:
         self._ids = count(1)
         self._lock = threading.Lock()
 
-    def add(self, name: str) -> Item:
+    def add(self, name: str, tags: tuple[str, ...] = ()) -> Item:
         with self._lock:
-            item = Item(id=next(self._ids), name=name)
+            item = Item(id=next(self._ids), name=name, tags=tags)
             self._items[item.id] = item
         return item
 
