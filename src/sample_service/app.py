@@ -1,6 +1,6 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import time
+from http.server import BaseHTTPRequestHandler, HTTPServer
 
 from sample_service import routes
 from sample_service.config import Settings
