@@ -33,7 +33,9 @@ def create_item(payload: dict) -> tuple[int, dict]:
     if len(name) > MAX_NAME_LENGTH:
         return 400, {"error": f"name must be at most {MAX_NAME_LENGTH} characters"}
 
-    item = STORE.add(name)
+    tags = tuple(str(tag).strip() for tag in payload.get("tags", []) if str(tag).strip())
+
+    item = STORE.add(name, tags=tags)
     return 201, asdict(item)
 
 

@@ -29,3 +29,11 @@ def test_an_overlong_name_is_rejected():
 
     assert status == 400
     assert body["error"]
+
+
+def test_blank_tags_are_dropped():
+    routes.STORE = ItemStore()
+
+    _, created = routes.create_item({"name": "widget", "tags": ["a", " ", "b"]})
+
+    assert created["tags"] == ["a", "b"]
