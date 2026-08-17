@@ -9,7 +9,7 @@ memory and exposes them over a JSON API.
 | ------ | --------- | ------------------------ |
 | GET    | `/health` | Liveness probe           |
 | GET    | `/items`  | List the stored items    |
-| POST   | `/items`  | Create an item by name   |
+| POST   | `/items`  | Create an item by name and tags |
 | GET    | `/ready`  | Readiness plus item count |
 | GET    | `/items/{id}` | Read a single item   |
 | DELETE | `/items/{id}` | Delete a single item |
